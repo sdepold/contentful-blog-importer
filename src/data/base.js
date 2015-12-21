@@ -3,12 +3,8 @@
 export function importEntities (entries, space, entityContentType, data, entityName, dataMapper) {
   let entities = data[`${entityName}s`];
 
-  console.log('-----')
-  console.log(data, entities, entityName);
-
   return Promise.all(
-    data[`${entityName}s`].map((entityData) => {
-      console.log(entityData)
+    entities.map((entityData) => {
       let entity = entries.find((entry) => entry.sys.id === entityData.slug);
 
       if (entity) {
@@ -35,4 +31,21 @@ export function importEntities (entries, space, entityContentType, data, entityN
         });
     })
   );
+}
+
+export function validateEntities (entities, entityName, schema) {
+  let schemaProperties = schema.fields.map((field) => field.id);
+
+  entities.forEach((entity) => {
+    let invalidProps = Object.keys(entity).filter((property) =>
+      schemaProperties.indexOf(property) === -1
+    );
+
+    if (invalidProps.length > 0) {
+      console.log(`Invalid ${entityName}: `, entity);
+      console.log(`Invalid ${entityName} properties: `, invalidProps);
+
+      throw new Error(`Invalid ${entityName} properties found: ` + invalidProps.join(', '));
+    }
+  });
 }

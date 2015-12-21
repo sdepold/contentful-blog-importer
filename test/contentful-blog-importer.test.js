@@ -51,7 +51,7 @@ describe('ContentfulBlogImporter', () => {
       });
     });
 
-    it.only('imports the data', () => {
+    it('imports the data', () => {
       return env.importer.client.getSpace('space-id').then((space) => {
         schemaMock.expects('_ensureSchema').once().withArgs(space)
           .returns(new Promise((resolve) => resolve([space, contentTypes]) ));

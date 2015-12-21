@@ -1,5 +1,6 @@
 'use strict';
 
+import { expect } from 'chai';
 import { prepareApiStub, fakeContentTypes } from '../support/helper';
 import importData from '../../src/data';
 import * as Author from '../../src/data/author';
@@ -10,22 +11,58 @@ import * as sinon from 'sinon';
 describe('data', () => {
   let env = prepareApiStub();
   let contentTypes = fakeContentTypes();
-  let data = { authors: [], posts: [], tags: [] };
 
   describe('importData', () => {
-    let space;
+    let space, data;
 
     beforeEach(() => {
+      data = { authors: [], posts: [], tags: [] };
       return env.importer.client.getSpace('space-id')
         .then((_space) => space = _space);
     });
 
-    it.only('imports data', () => {
-      sinon.mock(Author).expects('importData').withArgs([], space, contentTypes.Author, data);
-      // sinon.mock(Post).expects('importData').withArgs([], space, contentTypes.Post, data);
-      sinon.mock(Tag).expects('importData').withArgs([], space, contentTypes.Tag, data);
+    it('imports data', () => {
+      let authorMock = sinon.mock(Author);
+      let tagMock = sinon.mock(Tag);
 
-      return importData(space, contentTypes, data);
+      authorMock.expects('importData').withArgs([], space, contentTypes.Author, data);
+      // mocks.push(sinon.mock(Post).expects('importData').withArgs([], space, contentTypes.Post, data));
+      tagMock.expects('importData').withArgs([], space, contentTypes.Tag, data);
+
+      return importData(space, contentTypes, data).then(() => {
+        authorMock.restore();
+        tagMock.restore();
+      });
+    });
+
+    it('rejects malformed authors', () => {
+      data.authors.push({ name: 'John Doe', slug: 'john-doe', foo: 'bar' });
+
+      return importData(space, contentTypes, data).then(() => {
+        expect('should not end up here').to.eql(null);
+      }, (err) => {
+        expect(err.message).to.eql('Invalid author properties found: foo');
+      });
+    });
+
+    // it.only('rejects malformed posts', () => {
+    //   data.posts.push({ foo: 'bar' });
+    //
+    //   return importData(space, contentTypes, data).then(() => {
+    //     expect('should not end up here').to.eql(null);
+    //   }, (err) => {
+    //     expect(err.message).to.eql('Invalid post properties found: foo');
+    //   });
+    // });
+
+    it('rejects malformed tags', () => {
+      data.tags.push({ name: 'General', slug: 'general', foo: 'bar' });
+
+      return importData(space, contentTypes, data).then(() => {
+        expect('should not end up here').to.eql(null);
+      }, (err) => {
+        expect(err.message).to.eql('Invalid tag properties found: foo');
+      });
     });
   });
 });
