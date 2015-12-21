@@ -2,6 +2,9 @@
 
 import stubApi from './api';
 import ContentfulBlogImporter from '../../src/contentful-blog-importer';
+import * as AuthorSchema from '../../src/schema/author';
+import * as PostSchema from '../../src/schema/post';
+import * as TagSchema from '../../src/schema/tag';
 
 export function prepareApiStub () {
   let result = {};
@@ -18,4 +21,12 @@ export function prepareApiStub () {
   });
 
   return result;
+}
+
+export function fakeContentTypes () {
+  return {
+    Author: AuthorSchema.schema(),
+    Post: PostSchema.schema(),
+    Tag: TagSchema.schema()
+  };
 }
