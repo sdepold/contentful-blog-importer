@@ -18,13 +18,14 @@ export default class ContentfulBlogImporter {
     this.spaceId = spaceId;
     this.cmaToken = cmaToken;
     this.options = _.extend({
-      host: 'api.contentful.com'
+      host: 'api.contentful.com',
+      secure: true
     }, options);
 
     this.client = contentful.createClient({
       accessToken: this.cmaToken,
       host: this.options.host,
-      secure: false
+      secure: this.options.secure
     });
   }
 
