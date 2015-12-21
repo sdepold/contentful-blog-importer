@@ -9,7 +9,7 @@ export function prepareApiStub () {
   beforeEach(() => {
     result.app = stubApi();
     result.importer = new ContentfulBlogImporter(
-      'space-id', 'cma-token', { host: 'localhost:3000' }
+      'space-id', 'cma-token', { host: 'localhost:3000', secure: false }
     );
   });
 

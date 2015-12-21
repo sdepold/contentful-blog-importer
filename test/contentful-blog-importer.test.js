@@ -27,20 +27,35 @@ describe('ContentfulBlogImporter', () => {
   });
 
   describe('run', () => {
-    it('ensures the schema', () => {
-      let schemaMock = sinon.mock(env.importer);
+    let contentTypes = {
+      Author: { sys: { id: 'author', version: 1 }, fields: [] },
+      Post: { sys: { id: 'post', version: 1 }, fields: [] },
+      Tag: { sys: { id: 'tag', version: 1 }, fields: [] }
+    };
+    let schemaMock;
 
+    beforeEach(() => {
+      schemaMock = sinon.mock(env.importer);
+    });
+
+    afterEach(() => {
+      schemaMock.restore();
+    });
+
+    it('ensures the schema', () => {
       return env.importer.client.getSpace('space-id').then((space) => {
-        schemaMock.expects('_ensureSchema')
-          .once()
-          .withArgs(space)
-          .returns(new Promise((resolve) => {
-            resolve([space, {
-              Author: { sys: { id: 'author', version: 1 }, fields: [] },
-              Post: { sys: { id: 'post', version: 1 }, fields: [] },
-              Tag: { sys: { id: 'tag', version: 1 }, fields: [] }
-            }]);
-          }));
+        schemaMock.expects('_ensureSchema').once().withArgs(space)
+          .returns(new Promise((resolve) => resolve([space, contentTypes]) ));
+
+        return env.importer.run();
+      });
+    });
+
+    it.only('imports the data', () => {
+      return env.importer.client.getSpace('space-id').then((space) => {
+        schemaMock.expects('_ensureSchema').once().withArgs(space)
+          .returns(new Promise((resolve) => resolve([space, contentTypes]) ));
+        schemaMock.expects('_importData').once();
 
         return env.importer.run();
       });
