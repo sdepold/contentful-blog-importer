@@ -3,7 +3,7 @@
 import { importEntities, validateEntities } from './base';
 import { schema } from '../schema/tag';
 
-export function importData (entries, space, tagType, data) {
+export function importData (entries, space, contentType, data) {
   validateEntities(data.tags || [], 'tag', schema());
   return importEntities(...arguments, 'tag', mapData);
 }

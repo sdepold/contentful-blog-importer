@@ -12,10 +12,7 @@ export function importEntities (entries, space, entityContentType, data, entityN
         return entity;
       }
 
-      let mappedData = dataMapper(entityData);
-      let promise    = (mappedData instanceof Promise) ? mappedData : Promise.resolve(mappedData);
-
-      return promise
+      return mapData(entityData, dataMapper)
         .then((mappedData) => {
           return space.createEntry(entityContentType, mappedData);
         })
@@ -31,6 +28,12 @@ export function importEntities (entries, space, entityContentType, data, entityN
         });
     })
   );
+}
+
+function mapData (data, mapper) {
+  let mappedData = mapper(data);
+
+  return (mappedData instanceof Promise) ? mappedData : Promise.resolve(mappedData);
 }
 
 export function validateEntities (entities, entityName, schema) {

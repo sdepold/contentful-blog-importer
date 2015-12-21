@@ -3,7 +3,7 @@
 import { importEntities, validateEntities } from './base';
 import { schema } from '../schema/post';
 
-export function importData (entries, space, postType, data) {
+export function importData (entries, space, contentType, data) {
   validateEntities(data.posts || [], 'post', schema());
   return importEntities(...arguments, 'post', mapData);
 }
