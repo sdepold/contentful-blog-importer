@@ -1,52 +1,20 @@
 'use strict';
 
 let express = require('express');
+let bodyParser = require('body-parser');
+import logger from './api/logger';
+import * as routes from './api/default-routes';
 
 export default function stubApi (options = {}) {
   let app = express();
 
-  function logRequest (req, res, next) {
-    if (process.env.DEBUG) {
-      console.log(req.method, req.path);
-    }
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(logger);
 
-    next();
-  }
-
-  app.get('*', logRequest);
-  app.put('*', logRequest);
-  app.post('*', logRequest);
-
-  app.get('/spaces/space-id', (req, res) => {
-    res.send(options.space || {
-      sys: { id: 'space-id' },
-      name: 'some-space'
-    });
-  });
-
-  app.get('/spaces/space-id/content_types', (req, res) => {
-    let contentTypes = options.contentTypes || [];
-
-    res.send({
-      sys: { type: 'Array' },
-      total: contentTypes.length,
-      skip: 0,
-      limit: 100,
-      items: contentTypes
-    });
-  });
-
-  app.get('/spaces/space-id/entries', (req, res) => {
-    let entries = options.entries || [];
-
-    res.send({
-      sys: { type: 'Array' },
-      total: entries.length,
-      skip: 0,
-      limit: 100,
-      items: entries
-    });
-  });
+  routes.getSpace(app, options);
+  routes.getContentTypes(app, options);
+  routes.getEntries(app, options);
 
   let server = app.listen(3000);
 
