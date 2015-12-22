@@ -4,7 +4,7 @@
   "description": "Generic data importer for blogs on Contentful",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require babel-register test/*.test.js test/**/*.test.js"
+    "test": "NODE_ENV=test mocha --require babel-register test/*.test.js test/**/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,8 @@
     "babel-register": "^6.3.13",
     "body-parser": "^1.14.2",
     "contentful-management": "^0.7.1",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "winston": "^2.1.1"
   },
   "devDependencies": {
     "chai": "^3.4.1",

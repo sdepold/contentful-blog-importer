@@ -1,5 +1,7 @@
 'use strict';
 
+import logger from '../logger';
+
 export function importEntities (entries, space, entityContentType, data, entityName, dataMapper) {
   let entities = data[`${entityName}s`];
 
@@ -8,7 +10,7 @@ export function importEntities (entries, space, entityContentType, data, entityN
       let entity = entries.find((entry) => entry.sys.id === entityData.slug);
 
       if (entity) {
-        console.log(`- The ${entityName} "${entityData.slug}" already exists`);
+        logger.info(`- The ${entityName} "${entityData.slug}" already exists`);
         return entity;
       }
 
@@ -17,11 +19,11 @@ export function importEntities (entries, space, entityContentType, data, entityN
           return space.createEntry(entityContentType, mappedData);
         })
         .then((entity) => {
-          console.log(`- Created ${entityName} "${entityData.slug}"`);
+          logger.info(`- Created ${entityName} "${entityData.slug}"`);
 
           if (!entityData.status || (entityData.status === 'published')) {
             return space.publishEntry(entity).then((entity) => {
-              console.log(`- Published ${entityName} "${entityData.slug}"`);
+              logger.info(`- Published ${entityName} "${entityData.slug}"`);
               return entity;
             });
           }
@@ -45,8 +47,8 @@ export function validateEntities (entities, entityName, schema) {
     );
 
     if (invalidProps.length > 0) {
-      console.log(`Invalid ${entityName}: `, entity);
-      console.log(`Invalid ${entityName} properties: `, invalidProps);
+      logger.warn(`Invalid ${entityName}: `, entity);
+      logger.warn(`Invalid ${entityName} properties: `, invalidProps);
 
       throw new Error(`Invalid ${entityName} properties found: ` + invalidProps.join(', '));
     }
