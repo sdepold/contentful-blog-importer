@@ -8,8 +8,7 @@ import * as routes from './api/default-routes';
 export default function stubApi (options = {}) {
   let app = express();
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json({ type: 'application/*+json' }));
   app.use(logger);
 
   routes.getSpace(app, options);

@@ -21,7 +21,7 @@ new ContentfulBlogImporter(spaceId, cmaToken, options).run(data);
 
 ```js
 let data = {
-  users: [
+  authors: [
     {
       name: 'John Doe',
       slug: 'john-doe', // Falls back to an auto-generated slug based on the name.
