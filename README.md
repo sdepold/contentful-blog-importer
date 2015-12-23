@@ -45,7 +45,7 @@ let data = {
       publishedAt: '2014-08-19T22:00:00+02:00',
       metaTitle: 'Title for contentful-blog-importer post',
       metaDescription: 'Description for contentful-blog-importer post',
-      author: 'slug-of-a-user',
+      author: 'slug-of-an-author',
       tags: [ 'slug-of-a-tag', 'slug-of-another-tag' ]
     }
   ]

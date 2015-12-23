@@ -8,14 +8,28 @@ export function importData (entries, space, contentType, data) {
   return importEntities(...arguments, 'post', mapData);
 }
 
-function mapData (user) {
+function mapData (post) {
   return {
-    sys: { id: user.slug },
+    sys: { id: post.slug },
     fields: {
-      name: { 'en-US': user.name },
-      slug: { 'en-US': user.slug },
-      email: { 'en-US': user.email },
-      image: { 'en-US': user.image }
+      title: { 'en-US': post.title },
+      slug: { 'en-US': post.slug },
+      body: { 'en-US': post.body },
+      publishedAt: { 'en-US': post.publishedAt },
+      metaTitle: { 'en-US': post.metaTitle },
+      metaDescription: { 'en-US': post.metaDescription },
+      author: { 'en-US': getAuthor(post) },
+      tags: { 'en-US': getTags(post) }
     }
   };
+}
+
+function getTags (post) {
+  return post.tags.map((tagSlug) => {
+    return { sys: { type: 'Link', linkType: 'Entry', id: tagSlug } };
+  });
+}
+
+function getAuthor (post) {
+  return { sys: { type: 'Link', linkType: 'Entry', id: post.author } };
 }
