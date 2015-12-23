@@ -25,7 +25,7 @@ function mapData (post) {
 }
 
 function getTags (post) {
-  return post.tags.map((tagSlug) => {
+  return (post.tags || []).map((tagSlug) => {
     return { sys: { type: 'Link', linkType: 'Entry', id: tagSlug } };
   });
 }
