@@ -49,7 +49,8 @@ function replaceEmbeddings (space, post) {
     return importAsset(space, post, title, url).then(
       (asset) => [url, asset],
       (err) => {
-        logger.warn('Asset import failed: ', err.message);
+        logger.warn('Asset import failed!', { assetUrl: url, post: post.slug });
+        logger.warn(err);
       }
     );
   })).then((assetMap) => {

@@ -2,7 +2,7 @@
 
 let mime     = require('mime');
 let parseUrl = require('url').parse;
-let questor  = require('questor');
+let request  = require('request');
 let retry    = require('retry');
 let slug     = require('slug');
 
@@ -69,7 +69,15 @@ function maybePublishAsset (space, asset) {
 }
 
 function remoteResourceExists (url) {
-  return questor(url, { method: 'HEAD' });
+  return new Promise((resolve, reject) => {
+    request.head(url, function (err, response, body) {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve(body);
+    });
+  });
 }
 
 function isProcessedAsset (asset) {
