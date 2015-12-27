@@ -1,5 +1,6 @@
 'use strict';
 
+import * as _ from 'lodash';
 import logger from '../logger';
 
 export function importEntities (entries, space, entityContentType, data, entityName, dataMapper) {
@@ -45,6 +46,8 @@ export function validateEntities (entities, entityName, schema) {
     let invalidProps = Object.keys(entity).filter((property) =>
       schemaProperties.indexOf(property) === -1
     );
+
+    invalidProps = _.without(invalidProps, 'status');
 
     if (invalidProps.length > 0) {
       logger.warn(`Invalid ${entityName}: `, entity);
