@@ -1,6 +1,6 @@
 {
   "name": "contentful-blog-importer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Generic data importer for blogs on Contentful",
   "main": "index.js",
   "scripts": {
