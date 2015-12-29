@@ -71,7 +71,7 @@ function maybePublishAsset (space, asset) {
 function remoteResourceExists (url) {
   return new Promise((resolve, reject) => {
     request.head(url, function (err, response, body) {
-      if (err) {
+      if (err || (response.statusCode >= 400)) {
         return reject(err);
       }
 

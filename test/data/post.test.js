@@ -91,7 +91,8 @@ describe('post', () => {
       data.posts[0] = {
         title: 'A post',
         slug: 'a-post',
-        body: '![hello world](http://localhost:3000/nice-pic.jpg)'
+        body: '![hello world](http://localhost:3000/nice-pic.jpg)',
+        author: 'slug-of-an-author'
       };
 
       let asset = { created: false, processed: false, published: false };
@@ -104,7 +105,7 @@ describe('post', () => {
         publishedAt: {},
         metaTitle: {},
         metaDescription: {},
-        author: { 'en-US': { sys: { type: 'Link', linkType: 'Entry' } } },
+        author: { 'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'slug-of-an-author'} } },
         tags: { 'en-US': [] }
       };
       let getCallCount = 0;
@@ -186,6 +187,39 @@ describe('post', () => {
       return Post.importData([], space, postContentType, data).then(() => {
         expect(asset).to.eql({ created: true, processed: true, published: true });
       });
+    });
+
+    it('ignores non-existing embeddings', () => {
+      data.posts[0] = {
+        title: 'A post',
+        slug: 'a-post',
+        body: '![hello world](http://localhost:3000/no-pic.jpg)',
+        author: 'slug-of-an-author'
+      };
+
+      let postContentType = _.extend({ sys: { id: 'post' } }, contentTypes.Post);
+      let expectedPostFields = {
+        title: { 'en-US': 'A post' },
+        slug: { 'en-US': 'a-post' },
+        // Keep the original embedded reference.
+        body: { 'en-US': '![hello world](http://localhost:3000/no-pic.jpg)' },
+        publishedAt: {},
+        metaTitle: {},
+        metaDescription: {},
+        author: { 'en-US': { sys: { type: 'Link', linkType: 'Entry', id: 'slug-of-an-author'} } },
+        tags: { 'en-US': [] }
+      };
+
+      env.app.put('/spaces/space-id/entries/a-post', (req, res) => {
+        expect(req.body).to.eql({ fields: expectedPostFields });
+        res.send({ sys: { id: 'a-post', version: 1 }, fields: expectedPostFields });
+      });
+
+      env.app.put('/spaces/space-id/entries/a-post/published', (req, res) => {
+        res.send({ sys: { id: 'a-post', version: 2 }, fields: expectedPostFields });
+      });
+
+      return Post.importData([], space, postContentType, data);
     });
   });
 });
