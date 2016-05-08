@@ -26,7 +26,7 @@
     "babel-preset-es2015": "^6.3.13",
     "babel-register": "^6.3.13",
     "contentful-management": "^0.7.1",
-    "lodash": "^3.10.1",
+    "lodash": "^4.12.0",
     "mime": "^1.3.4",
     "request": "^2.67.0",
     "retry": "^0.8.0",
