@@ -37,7 +37,7 @@
     "body-parser": "^1.14.2",
     "chai": "^3.4.1",
     "express": "^4.13.3",
-    "mocha": "^2.3.4",
+    "mocha": "^2.5.0",
     "sinon": "^1.17.2",
     "underscore.string": "^3.2.2"
   }
